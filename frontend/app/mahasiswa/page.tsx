@@ -6,7 +6,7 @@ import MahasiswaForm from "@/components/MahasiswaForm";
 import MahasiswaTable from "@/components/MahasiswaTable";
 import {
   createMahasiswa,
-  deleteMahasiswa,
+  getAllProdi,
   getMahasiswa,
   Mahasiswa,
   MahasiswaInput,
@@ -21,6 +21,7 @@ export default function MahasiswaPage() {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [prodi, setProdi] = useState<{ id: number; nama: string }[]>([]);
 
   const loadMahasiswa = async () => {
     try {
@@ -37,8 +38,24 @@ export default function MahasiswaPage() {
     }
   };
 
+  const loadProdi = async () => {
+    try {
+      setLoading(true);
+      setError("");
+      const data = await getAllProdi();
+      setProdi(data);
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Gagal mengambil data prodi",
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     loadMahasiswa();
+    loadProdi();
   }, []);
 
   const handleSubmit = async (payload: MahasiswaInput) => {
@@ -94,6 +111,7 @@ export default function MahasiswaPage() {
 
       <MahasiswaForm
         selectedMahasiswa={selectedMahasiswa}
+        prodi={prodi}
         onSubmit={handleSubmit}
         onCancelEdit={() => setSelectedMahasiswa(null)}
       />

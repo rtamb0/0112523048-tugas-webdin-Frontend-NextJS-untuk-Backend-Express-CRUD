@@ -7,6 +7,7 @@ type Props = {
   selectedMahasiswa: Mahasiswa | null;
   onSubmit: (payload: MahasiswaInput) => Promise<void>;
   onCancelEdit: () => void;
+  prodi: { id: number; nama_prodi: string }[];
 };
 
 const initialForm: MahasiswaInput = {
@@ -20,6 +21,7 @@ export default function MahasiswaForm({
   selectedMahasiswa,
   onSubmit,
   onCancelEdit,
+  prodi,
 }: Props) {
   const [form, setForm] = useState<MahasiswaInput>(initialForm);
   const [loading, setLoading] = useState(false);
@@ -29,7 +31,7 @@ export default function MahasiswaForm({
       setForm({
         nim: selectedMahasiswa.nim,
         nama: selectedMahasiswa.nama,
-        prodi: selectedMahasiswa.prodi,
+        prodi: selectedMahasiswa.prodi_id.toString(),
         angkatan: selectedMahasiswa.angkatan,
       });
     } else {
@@ -78,13 +80,19 @@ export default function MahasiswaForm({
 
         <div className="form-group">
           <label htmlFor="prodi">Prodi</label>
-          <input
+          <select
             id="prodi"
             value={form.prodi}
             onChange={(e) => setForm({ ...form, prodi: e.target.value })}
-            placeholder="Informatika"
             required
-          />
+          >
+            <option value="">Pilih Prodi</option>
+            {prodi.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.nama_prodi}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="form-group">

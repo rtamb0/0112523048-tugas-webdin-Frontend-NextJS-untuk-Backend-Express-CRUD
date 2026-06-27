@@ -40,3 +40,11 @@ export async function createMahasiswa(formData: FormData) {
   if (!response.ok) throw new Error(result.message);
   return result;
 }
+
+export async function getAllProdi() {
+  const response = await fetch(`${API_URL}/prodi`);
+  const result = await response.json();
+
+  if (!response.ok) throw new Error(result.message);
+  return result.data;
+}
