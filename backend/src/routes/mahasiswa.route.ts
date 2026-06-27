@@ -1,15 +1,11 @@
 import { Router, Request, Response } from "express";
 import { mahasiswa, Mahasiswa } from "../data/mahasiswa.data";
+import { getAllMahasiswa } from "../controllers/mahasiswa.controller";
 
 const router = Router();
 
 // READ ALL
-router.get("/", (req: Request, res: Response) => {
-  res.json({
-    message: "Data mahasiswa berhasil diambil",
-    data: mahasiswa,
-  });
-});
+router.get("/", getAllMahasiswa);
 
 // READ DETAIL
 router.get("/:id", (req: Request, res: Response) => {
