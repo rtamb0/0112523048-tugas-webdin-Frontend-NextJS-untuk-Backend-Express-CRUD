@@ -27,7 +27,7 @@ export async function getMahasiswa(params: {
   const result = await response.json();
 
   if (!response.ok) throw new Error(result.message);
-  return result.data;
+  return result;
 }
 
 export async function createMahasiswa(formData: FormData) {
@@ -46,5 +46,5 @@ export async function getAllProdi() {
   const result = await response.json();
 
   if (!response.ok) throw new Error(result.message);
-  return result.data;
+  return result;
 }

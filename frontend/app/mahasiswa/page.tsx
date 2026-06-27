@@ -20,13 +20,25 @@ export default function MahasiswaPage() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [prodi, setProdi] = useState<{ id: number; nama: string }[]>([]);
+  const [search, setSearch] = useState("");
+  const [prodiId, setProdiId] = useState("");
+  const [page, setPage] = useState(1);
+  const [limit] = useState(10);
+  const [totalPage, setTotalPage] = useState(1);
 
   const loadMahasiswa = async () => {
     try {
       setLoading(true);
       setError("");
-      const data = await getMahasiswa();
-      setMahasiswa(data);
+      const result = await getMahasiswa({
+        search,
+        prodi_id: prodiId,
+        page,
+        limit,
+      });
+
+      setMahasiswa(result.data);
+      setTotalPage(result.meta.totalPage);
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Gagal mengambil data mahasiswa",
@@ -40,8 +52,8 @@ export default function MahasiswaPage() {
     try {
       setLoading(true);
       setError("");
-      const data = await getAllProdi();
-      setProdi(data);
+      const result = await getAllProdi();
+      setProdi(result.data);
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Gagal mengambil data prodi",
@@ -54,7 +66,12 @@ export default function MahasiswaPage() {
   useEffect(() => {
     loadMahasiswa();
     loadProdi();
-  }, []);
+  }, [page]);
+
+  const handleSearch = () => {
+    setPage(1);
+    loadMahasiswa();
+  };
 
   const handleSubmit = async (payload: MahasiswaInput) => {
     try {
@@ -126,6 +143,35 @@ export default function MahasiswaPage() {
       />
 
       <section className="card" style={{ marginTop: 20 }}>
+        <input
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Cari NIM atau nama"
+        />
+
+        <select value={prodiId} onChange={(e) => setProdiId(e.target.value)}>
+          <option value="">Semua Prodi</option>
+          {prodi.map((item) => (
+            <option key={item.id} value={item.id}>
+              {item.nama_prodi}
+            </option>
+          ))}
+        </select>
+
+        <button onClick={handleSearch}>Cari</button>
+
+        <button disabled={page <= 1} onClick={() => setPage(page - 1)}>
+          Previous
+        </button>
+
+        <span>
+          Halaman {page} dari {totalPage}
+        </span>
+
+        <button disabled={page >= totalPage} onClick={() => setPage(page + 1)}>
+          Next
+        </button>
+
         <h2>Daftar Mahasiswa</h2>
         {loading ? (
           <p>Memuat data...</p>
