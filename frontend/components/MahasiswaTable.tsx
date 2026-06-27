@@ -33,7 +33,9 @@ export default function MahasiswaTable({ mahasiswa, onEdit, onDelete }: Props) {
           <tr key={item.id}>
             <td>{index + 1}</td>
             <td>{item.nim}</td>
-            <td>
+            <td
+              style={item.foto ? { display: "flex", alignItems: "center" } : {}}
+            >
               {item.foto && (
                 <img
                   src={
@@ -44,7 +46,11 @@ export default function MahasiswaTable({ mahasiswa, onEdit, onDelete }: Props) {
                   alt={item.nama}
                   width={48}
                   height={48}
-                  style={{ borderRadius: "50%", objectFit: "cover" }}
+                  style={{
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                    marginRight: "10px",
+                  }}
                 />
               )}
               {item.nama}
