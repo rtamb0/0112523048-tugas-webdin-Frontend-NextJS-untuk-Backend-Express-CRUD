@@ -1,7 +1,9 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { Mahasiswa, MahasiswaInput } from "@/lib/api";
+
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 type Props = {
   selectedMahasiswa: Mahasiswa | null;
@@ -15,6 +17,7 @@ const initialForm: MahasiswaInput = {
   nama: "",
   prodi: "",
   angkatan: new Date().getFullYear(),
+  file: null,
 };
 
 export default function MahasiswaForm({
@@ -25,6 +28,7 @@ export default function MahasiswaForm({
 }: Props) {
   const [form, setForm] = useState<MahasiswaInput>(initialForm);
   const [loading, setLoading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (selectedMahasiswa) {
@@ -33,9 +37,13 @@ export default function MahasiswaForm({
         nama: selectedMahasiswa.nama,
         prodi: selectedMahasiswa.prodi_id.toString(),
         angkatan: selectedMahasiswa.angkatan,
+        file: selectedMahasiswa.foto,
       });
     } else {
       setForm(initialForm);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
     }
   }, [selectedMahasiswa]);
 
@@ -46,6 +54,9 @@ export default function MahasiswaForm({
     try {
       await onSubmit(form);
       setForm(initialForm);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
     } finally {
       setLoading(false);
     }
@@ -105,6 +116,33 @@ export default function MahasiswaForm({
               setForm({ ...form, angkatan: Number(e.target.value) })
             }
             required
+          />
+        </div>
+
+        <div className="form-group">
+          <div>
+            <img
+              src={
+                selectedMahasiswa && selectedMahasiswa.foto
+                  ? `${BACKEND_URL}/uploads/mahasiswa/${selectedMahasiswa.foto}`
+                  : "/avatar-placeholder.png"
+              }
+              alt="Current Foto"
+              width={48}
+              height={48}
+              style={{ borderRadius: "50%", objectFit: "cover" }}
+            />
+          </div>
+          <label htmlFor="file">Foto (opsional)</label>
+          <input
+            ref={fileInputRef}
+            id="file"
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+              const file = e.target.files?.[0] ?? null;
+              setForm({ ...form, file });
+            }}
           />
         </div>
       </div>

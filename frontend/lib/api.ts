@@ -18,16 +18,16 @@ export async function getMahasiswa(params: {
 }) {
   const query = new URLSearchParams();
 
-  if (params.search) query.set("search", params.search);
-  if (params.prodi_id) query.set("prodi_id", params.prodi_id);
-  if (params.page) query.set("page", String(params.page));
-  if (params.limit) query.set("limit", String(params.limit));
+  if (params?.search) query.set("search", params.search);
+  if (params?.prodi_id) query.set("prodi_id", params.prodi_id);
+  if (params?.page) query.set("page", String(params.page));
+  if (params?.limit) query.set("limit", String(params.limit));
 
   const response = await fetch(`${API_URL}/mahasiswa?${query.toString()}`);
   const result = await response.json();
 
   if (!response.ok) throw new Error(result.message);
-  return result;
+  return result.data;
 }
 
 export async function createMahasiswa(formData: FormData) {

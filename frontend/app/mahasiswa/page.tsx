@@ -9,8 +9,6 @@ import {
   getAllProdi,
   getMahasiswa,
   Mahasiswa,
-  MahasiswaInput,
-  updateMahasiswa,
 } from "@/lib/api";
 
 export default function MahasiswaPage() {
@@ -63,11 +61,22 @@ export default function MahasiswaPage() {
       setMessage("");
       setError("");
 
+      const formData = new FormData();
+
+      formData.append("nim", payload.nim);
+      formData.append("nama", payload.nama);
+      formData.append("prodi_id", payload.prodi);
+      formData.append("angkatan", String(payload.angkatan));
+
+      if (payload.file instanceof File) {
+        formData.append("foto", payload.file);
+      }
+
       if (selectedMahasiswa) {
-        await updateMahasiswa(selectedMahasiswa.id, payload);
+        await updateMahasiswa(selectedMahasiswa.id, formData);
         setMessage("Data mahasiswa berhasil diperbarui");
       } else {
-        await createMahasiswa(payload);
+        await createMahasiswa(formData);
         setMessage("Data mahasiswa berhasil ditambahkan");
       }
 

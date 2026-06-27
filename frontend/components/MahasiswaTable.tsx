@@ -2,6 +2,8 @@
 
 import { Mahasiswa } from "@/lib/api";
 
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+
 type Props = {
   mahasiswa: Mahasiswa[];
   onEdit: (item: Mahasiswa) => void;
@@ -31,8 +33,23 @@ export default function MahasiswaTable({ mahasiswa, onEdit, onDelete }: Props) {
           <tr key={item.id}>
             <td>{index + 1}</td>
             <td>{item.nim}</td>
-            <td>{item.nama}</td>
-            <td>{item.prodi}</td>
+            <td>
+              {item.foto && (
+                <img
+                  src={
+                    item.foto
+                      ? `${BACKEND_URL}/uploads/mahasiswa/${item.foto}`
+                      : "/avatar-placeholder.png"
+                  }
+                  alt={item.nama}
+                  width={48}
+                  height={48}
+                  style={{ borderRadius: "50%", objectFit: "cover" }}
+                />
+              )}
+              {item.nama}
+            </td>
+            <td>{item.nama_prodi}</td>
             <td>{item.angkatan}</td>
             <td>
               <div className="actions">
