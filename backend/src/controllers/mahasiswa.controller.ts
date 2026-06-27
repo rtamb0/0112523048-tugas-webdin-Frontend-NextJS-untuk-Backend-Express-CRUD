@@ -61,3 +61,85 @@ export const getAllMahasiswa = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Terjadi kesalahan server" });
   }
 };
+
+export const createMahasiswa = async (req: Request, res: Response) => {
+  try {
+    const { nim, nama, prodi_id, angkatan } = req.body;
+    const foto = req.file ? req.file.filename : null;
+
+    if (!nim || !nama || !prodi_id || !angkatan) {
+      return res.status(400).json({
+        message: "NIM, nama, prodi, dan angkatan wajib diisi",
+      });
+    }
+
+    const [existing]: any = await db.query(
+      "SELECT id FROM mahasiswa WHERE nim = ?",
+      [nim],
+    );
+
+    if (existing.length > 0) {
+      return res.status(400).json({ message: "NIM sudah digunakan" });
+    }
+
+    const [result]: any = await db.query(
+      `INSERT INTO mahasiswa (nim, nama, prodi_id, angkatan, foto)
+       VALUES (?, ?, ?, ?, ?)`,
+      [nim, nama, Number(prodi_id), Number(angkatan), foto],
+    );
+
+    res.status(201).json({
+      message: "Mahasiswa berhasil ditambahkan",
+      data: { id: result.insertId, nim, nama, prodi_id, angkatan, foto },
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Terjadi kesalahan server" });
+  }
+};
+
+export const updateMahasiswa = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { nim, nama, prodi_id, angkatan } = req.body;
+
+    const fields = ["nim = ?", "nama = ?", "prodi_id = ?", "angkatan = ?"];
+    const values: any[] = [nim, nama, Number(prodi_id), Number(angkatan)];
+
+    if (req.file) {
+      fields.push("foto = ?");
+      values.push(req.file.filename);
+    }
+
+    values.push(id);
+
+    const [result]: any = await db.query(
+      `UPDATE mahasiswa SET ${fields.join(", ")} WHERE id = ?`,
+      values,
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Mahasiswa tidak ditemukan" });
+    }
+
+    res.json({ message: "Mahasiswa berhasil diperbarui" });
+  } catch (error) {
+    res.status(500).json({ message: "Terjadi kesalahan server" });
+  }
+};
+
+export const deleteMahasiswa = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const [result]: any = await db.query("DELETE FROM mahasiswa WHERE id = ?", [
+      id,
+    ]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Mahasiswa tidak ditemukan" });
+    }
+
+    res.json({ message: "Mahasiswa berhasil dihapus" });
+  } catch (error) {
+    res.status(500).json({ message: "Terjadi kesalahan server" });
+  }
+};
