@@ -63,3 +63,34 @@ export async function getAllProdi() {
     throw error;
   }
 }
+
+export async function updateMahasiswa(id: number, formData: FormData) {
+  try {
+    const response = await fetch(`${API_URL}/mahasiswa/${id}`, {
+      method: "PUT",
+      body: formData,
+    });
+    const result = await response.json();
+
+    if (!response.ok) throw new Error(result.message);
+    return result;
+  } catch (error) {
+    console.error("Error updating mahasiswa:", error);
+    throw error;
+  }
+}
+
+export async function deleteMahasiswa(id: number) {
+  try {
+    const response = await fetch(`${API_URL}/mahasiswa/${id}`, {
+      method: "DELETE",
+    });
+    const result = await response.json();
+
+    if (!response.ok) throw new Error(result.message);
+    return result;
+  } catch (error) {
+    console.error("Error deleting mahasiswa:", error);
+    throw error;
+  }
+}

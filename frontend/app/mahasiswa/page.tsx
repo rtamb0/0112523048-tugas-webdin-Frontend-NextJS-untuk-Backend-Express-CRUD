@@ -9,6 +9,8 @@ import {
   getAllProdi,
   getMahasiswa,
   Mahasiswa,
+  updateMahasiswa,
+  deleteMahasiswa,
 } from "@/lib/api";
 
 export default function MahasiswaPage() {
