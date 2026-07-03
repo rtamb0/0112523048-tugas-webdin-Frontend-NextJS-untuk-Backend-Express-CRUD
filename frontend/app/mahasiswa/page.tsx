@@ -11,8 +11,9 @@ import {
   Mahasiswa,
   updateMahasiswa,
   deleteMahasiswa,
+  logoutAccount,
 } from "@/lib/api";
-import { getUser } from "@/lib/auth";
+import { getUser, logout } from "@/lib/auth";
 
 export default function MahasiswaPage() {
   const [mahasiswa, setMahasiswa] = useState<Mahasiswa[]>([]);
@@ -132,10 +133,11 @@ export default function MahasiswaPage() {
     }
   };
 
-  const confirmLogout = () => {
+  const handleLogout = async () => {
     const confirmed = window.confirm("Yakin ingin logout?");
     if (confirmed) {
-      localStorage.removeItem("auth");
+      await logoutAccount();
+      logout();
       window.location.href = "/login";
     }
   };
@@ -152,7 +154,7 @@ export default function MahasiswaPage() {
           <div>
             <p>Welcome, {user?.name || "User"}</p>
           </div>
-          <button className="btn-danger" onClick={confirmLogout}>
+          <button className="btn-danger" onClick={handleLogout}>
             Logout
           </button>
         </div>
