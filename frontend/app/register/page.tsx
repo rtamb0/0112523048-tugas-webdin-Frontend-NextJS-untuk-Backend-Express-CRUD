@@ -2,29 +2,24 @@
 
 import { useState } from "react";
 import { saveAuth } from "@/lib/auth";
-import { loginAccount } from "@/lib/api";
+import { registerAccount } from "@/lib/api";
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     try {
       e.preventDefault();
       setError("");
 
-      const result = await loginAccount(email, password);
+      await registerAccount(name, email, password);
 
-      if (!result) {
-        setError(result?.message || "Login failed");
-        return;
-      }
-
-      saveAuth(result.token, result.user);
-      window.location.href = "/mahasiswa";
+      window.location.href = "/login";
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Login gagal");
+      setError(err instanceof Error ? err.message : "Registrasi gagal");
     }
   };
 
@@ -38,8 +33,8 @@ export default function LoginPage() {
         justifyContent: "center",
       }}
     >
-      <form onSubmit={handleLogin}>
-        <h1 style={{ textAlign: "center" }}>Login</h1>
+      <form onSubmit={handleRegister}>
+        <h1 style={{ textAlign: "center" }}>Register</h1>
         {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}
         <div
           className="form-group"
@@ -50,6 +45,11 @@ export default function LoginPage() {
             width: "300px",
           }}
         >
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Name"
+          />
           <input
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -67,15 +67,15 @@ export default function LoginPage() {
           className="btn btn-primary"
           style={{ width: "100%" }}
         >
-          Login
+          Register
         </button>
       </form>
       <button
         style={{ marginTop: 10 }}
         className="btn btn-secondary"
-        onClick={() => (window.location.href = "/register")}
+        onClick={() => (window.location.href = "/login")}
       >
-        Don't have an account? Register here.
+        Already have an account? Login here.
       </button>
     </div>
   );
