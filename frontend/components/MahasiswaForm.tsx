@@ -125,7 +125,7 @@ export default function MahasiswaForm({
               src={
                 selectedMahasiswa && selectedMahasiswa.foto
                   ? `${BACKEND_URL}/uploads/mahasiswa/${selectedMahasiswa.foto}`
-                  : "/avatar-placeholder.png"
+                  : "/Portrait_Placeholder.png"
               }
               alt="Current Foto"
               width={48}
