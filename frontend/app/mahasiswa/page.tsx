@@ -12,6 +12,7 @@ import {
   updateMahasiswa,
   deleteMahasiswa,
 } from "@/lib/api";
+import { getUser } from "@/lib/auth";
 
 export default function MahasiswaPage() {
   const [mahasiswa, setMahasiswa] = useState<Mahasiswa[]>([]);
@@ -27,6 +28,14 @@ export default function MahasiswaPage() {
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
   const [totalPage, setTotalPage] = useState(1);
+  const [user, setUser] = useState<{ name: string; email: string } | null>(
+    null,
+  );
+
+  useEffect(() => {
+    const user = getUser();
+    setUser(user);
+  }, []);
 
   const loadMahasiswa = async () => {
     try {
@@ -123,6 +132,14 @@ export default function MahasiswaPage() {
     }
   };
 
+  const confirmLogout = () => {
+    const confirmed = window.confirm("Yakin ingin logout?");
+    if (confirmed) {
+      localStorage.removeItem("auth");
+      window.location.href = "/login";
+    }
+  };
+
   return (
     <main className="container">
       <div className="header">
@@ -131,9 +148,14 @@ export default function MahasiswaPage() {
           <p>Frontend Next.js yang terhubung ke backend Express.js.</p>
         </div>
 
-        <Link href="/">
-          <button className="btn-secondary">Kembali</button>
-        </Link>
+        <div>
+          <div>
+            <p>Welcome, {user?.name || "User"}</p>
+          </div>
+          <button className="btn-danger" onClick={confirmLogout}>
+            Logout
+          </button>
+        </div>
       </div>
 
       {message && <div className="message">{message}</div>}
