@@ -1,5 +1,21 @@
-import { redirect } from "next/navigation";
+"use client";
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { getToken } from "@/lib/auth";
 
 export default function HomePage() {
-  redirect("/login");
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = getToken();
+
+    if (!token) {
+      router.replace("/login");
+    } else {
+      router.replace("/mahasiswa");
+    }
+  }, [router]);
+
+  return null;
 }
