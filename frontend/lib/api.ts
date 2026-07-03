@@ -1,3 +1,5 @@
+import { getToken } from "./auth";
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export type Mahasiswa = {
@@ -24,7 +26,11 @@ export async function getMahasiswa(params: {
     if (params?.page) query.set("page", String(params.page));
     if (params?.limit) query.set("limit", String(params.limit));
 
-    const response = await fetch(`${API_URL}/mahasiswa?${query.toString()}`);
+    const response = await fetch(`${API_URL}/mahasiswa?${query.toString()}`, {
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+    });
     const result = await response.json();
 
     if (!response.ok) throw new Error(result.message);
@@ -39,6 +45,9 @@ export async function createMahasiswa(formData: FormData) {
   try {
     const response = await fetch(`${API_URL}/mahasiswa`, {
       method: "POST",
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
       body: formData,
     });
 
@@ -68,6 +77,9 @@ export async function updateMahasiswa(id: number, formData: FormData) {
   try {
     const response = await fetch(`${API_URL}/mahasiswa/${id}`, {
       method: "PUT",
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
       body: formData,
     });
     const result = await response.json();
@@ -84,6 +96,9 @@ export async function deleteMahasiswa(id: number) {
   try {
     const response = await fetch(`${API_URL}/mahasiswa/${id}`, {
       method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
     });
     const result = await response.json();
 
