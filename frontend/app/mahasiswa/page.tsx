@@ -145,34 +145,22 @@ export default function MahasiswaPage() {
       />
 
       <section className="card" style={{ marginTop: 20 }}>
-        <input
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Cari NIM atau nama"
-        />
-
-        <select value={prodiId} onChange={(e) => setProdiId(e.target.value)}>
-          <option value="">Semua Prodi</option>
-          {prodi.map((item) => (
-            <option key={item.id} value={item.id}>
-              {item.nama_prodi}
-            </option>
-          ))}
-        </select>
-
-        <button onClick={handleSearch}>Cari</button>
-
-        <button disabled={page <= 1} onClick={() => setPage(page - 1)}>
-          Previous
-        </button>
-
-        <span>
-          Halaman {page} dari {totalPage}
-        </span>
-
-        <button disabled={page >= totalPage} onClick={() => setPage(page + 1)}>
-          Next
-        </button>
+        <div style={{ display: "flex", gap: 10, marginBottom: 10 }}>
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Cari NIM atau nama"
+          />
+          <select value={prodiId} onChange={(e) => setProdiId(e.target.value)}>
+            <option value="">Semua Prodi</option>
+            {prodi.map((item) => (
+              <option key={item.id} value={item.id}>
+                {item.nama_prodi}
+              </option>
+            ))}
+          </select>
+          <button onClick={handleSearch}>Cari</button>
+        </div>
 
         <h2>Daftar Mahasiswa</h2>
         {loading ? (
@@ -184,6 +172,27 @@ export default function MahasiswaPage() {
             onDelete={handleDelete}
           />
         )}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginTop: 10,
+          }}
+        >
+          <button disabled={page <= 1} onClick={() => setPage(page - 1)}>
+            Previous
+          </button>
+          <span>
+            Halaman {page} dari {totalPage}
+          </span>
+          <button
+            disabled={page >= totalPage}
+            onClick={() => setPage(page + 1)}
+          >
+            Next
+          </button>
+        </div>
       </section>
     </main>
   );
