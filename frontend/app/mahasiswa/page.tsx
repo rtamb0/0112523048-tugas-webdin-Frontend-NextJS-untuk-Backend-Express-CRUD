@@ -101,6 +101,7 @@ export default function MahasiswaPage() {
       await loadMahasiswa();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Gagal menyimpan data");
+      throw err;
     }
   };
 
@@ -116,6 +117,7 @@ export default function MahasiswaPage() {
       await loadMahasiswa();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Gagal menghapus data");
+      throw err;
     }
   };
 

@@ -57,6 +57,8 @@ export default function MahasiswaForm({
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
+    } catch (error) {
+      console.error("Error submitting form:", error);
     } finally {
       setLoading(false);
     }

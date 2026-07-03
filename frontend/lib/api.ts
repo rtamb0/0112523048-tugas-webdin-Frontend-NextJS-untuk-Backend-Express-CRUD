@@ -16,35 +16,50 @@ export async function getMahasiswa(params: {
   page?: number;
   limit?: number;
 }) {
-  const query = new URLSearchParams();
+  try {
+    const query = new URLSearchParams();
 
-  if (params?.search) query.set("search", params.search);
-  if (params?.prodi_id) query.set("prodi_id", params.prodi_id);
-  if (params?.page) query.set("page", String(params.page));
-  if (params?.limit) query.set("limit", String(params.limit));
+    if (params?.search) query.set("search", params.search);
+    if (params?.prodi_id) query.set("prodi_id", params.prodi_id);
+    if (params?.page) query.set("page", String(params.page));
+    if (params?.limit) query.set("limit", String(params.limit));
 
-  const response = await fetch(`${API_URL}/mahasiswa?${query.toString()}`);
-  const result = await response.json();
+    const response = await fetch(`${API_URL}/mahasiswa?${query.toString()}`);
+    const result = await response.json();
 
-  if (!response.ok) throw new Error(result.message);
-  return result;
+    if (!response.ok) throw new Error(result.message);
+    return result;
+  } catch (error) {
+    console.error("Error fetching mahasiswa:", error);
+    throw error;
+  }
 }
 
 export async function createMahasiswa(formData: FormData) {
-  const response = await fetch(`${API_URL}/mahasiswa`, {
-    method: "POST",
-    body: formData,
-  });
+  try {
+    const response = await fetch(`${API_URL}/mahasiswa`, {
+      method: "POST",
+      body: formData,
+    });
 
-  const result = await response.json();
-  if (!response.ok) throw new Error(result.message);
-  return result;
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.message);
+    return result;
+  } catch (error) {
+    console.error("Error creating mahasiswa:", error);
+    throw error;
+  }
 }
 
 export async function getAllProdi() {
-  const response = await fetch(`${API_URL}/prodi`);
-  const result = await response.json();
+  try {
+    const response = await fetch(`${API_URL}/prodi`);
+    const result = await response.json();
 
-  if (!response.ok) throw new Error(result.message);
-  return result;
+    if (!response.ok) throw new Error(result.message);
+    return result;
+  } catch (error) {
+    console.error("Error fetching prodi:", error);
+    throw error;
+  }
 }
