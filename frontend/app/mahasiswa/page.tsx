@@ -13,7 +13,7 @@ import {
   deleteMahasiswa,
   logoutAccount,
 } from "@/lib/api";
-import { getUser, logout } from "@/lib/auth";
+import { getToken, getUser, logout } from "@/lib/auth";
 
 export default function MahasiswaPage() {
   const [mahasiswa, setMahasiswa] = useState<Mahasiswa[]>([]);
@@ -34,6 +34,11 @@ export default function MahasiswaPage() {
   );
 
   useEffect(() => {
+    const token = getToken();
+    if (!token) {
+      window.location.href = "/login";
+      return;
+    }
     const user = getUser();
     setUser(user);
   }, []);
