@@ -9,6 +9,7 @@ type Props = {
   selectedMahasiswa: Mahasiswa | null;
   onSubmit: (payload: MahasiswaInput) => Promise<void>;
   onCancelEdit: () => void;
+  onCloseForm?: () => void;
   prodi: { id: number; nama_prodi: string }[];
 };
 
@@ -24,6 +25,7 @@ export default function MahasiswaForm({
   selectedMahasiswa,
   onSubmit,
   onCancelEdit,
+  onCloseForm,
   prodi,
 }: Props) {
   const [form, setForm] = useState<MahasiswaInput>(initialForm);
@@ -153,6 +155,22 @@ export default function MahasiswaForm({
         <button type="submit" className="btn-primary" disabled={loading}>
           {loading ? "Menyimpan..." : selectedMahasiswa ? "Update" : "Simpan"}
         </button>
+
+        {!selectedMahasiswa && (
+          <button
+            type="button"
+            className="btn-secondary"
+            onClick={() => {
+              setForm(initialForm);
+              if (fileInputRef.current) {
+                fileInputRef.current.value = "";
+              }
+              onCloseForm?.();
+            }}
+          >
+            Cancel
+          </button>
+        )}
 
         {selectedMahasiswa && (
           <button

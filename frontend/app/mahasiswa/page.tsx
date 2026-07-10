@@ -29,9 +29,15 @@ export default function MahasiswaPage() {
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
   const [totalPage, setTotalPage] = useState(1);
-  const [user, setUser] = useState<{ name: string; email: string } | null>(
-    null,
-  );
+  const [user, setUser] = useState<{
+    name: string;
+    email: string;
+    role: string;
+  } | null>(null);
+  const [formVisible, setFormVisible] = useState(false);
+
+  const role = user?.role;
+  const canCreate = role === "admin" || role === "operator";
 
   useEffect(() => {
     const token = getToken();
@@ -115,6 +121,7 @@ export default function MahasiswaPage() {
       }
 
       setSelectedMahasiswa(null);
+      setFormVisible(false);
       await loadMahasiswa();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Gagal menyimpan data");
@@ -168,12 +175,31 @@ export default function MahasiswaPage() {
       {message && <div className="message">{message}</div>}
       {error && <div className="message error">{error}</div>}
 
-      <MahasiswaForm
-        selectedMahasiswa={selectedMahasiswa}
-        prodi={prodi}
-        onSubmit={handleSubmit}
-        onCancelEdit={() => setSelectedMahasiswa(null)}
-      />
+      {formVisible && (
+        <MahasiswaForm
+          selectedMahasiswa={selectedMahasiswa}
+          prodi={prodi}
+          onSubmit={handleSubmit}
+          onCancelEdit={() => {
+            setSelectedMahasiswa(null);
+            setFormVisible(false);
+          }}
+          onCloseForm={() => setFormVisible(false)}
+        />
+      )}
+
+      {canCreate && (
+        <button
+          style={{ marginTop: 20 }}
+          className="btn-primary"
+          onClick={() => {
+            setSelectedMahasiswa(null);
+            setFormVisible(true);
+          }}
+        >
+          Tambah Mahasiswa
+        </button>
+      )}
 
       <section className="card" style={{ marginTop: 20 }}>
         <div style={{ display: "flex", gap: 10, marginBottom: 10 }}>
@@ -199,7 +225,10 @@ export default function MahasiswaPage() {
         ) : (
           <MahasiswaTable
             mahasiswa={mahasiswa}
-            onEdit={setSelectedMahasiswa}
+            onEdit={(mahasiswa) => {
+              setSelectedMahasiswa(mahasiswa);
+              setFormVisible(true);
+            }}
             onDelete={handleDelete}
           />
         )}
